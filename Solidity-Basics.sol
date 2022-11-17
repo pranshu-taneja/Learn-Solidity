@@ -26,7 +26,7 @@ pragma solidity ^0.8.6;                //pragma basically tells the compiler tha
 // Ohh btw function can also me made outside like totally open and can be used in any smart contract below.... try it btw
 
 
-/* 
+
 contract basics{
 
 
@@ -91,9 +91,9 @@ contract basics{
         return(my_map[number]);
     }
 }
-*/
 
-/* 
+
+
 contract variable_scopes_basics_1{
     
     // --- we have three scopes of variables of basically---  
@@ -124,9 +124,8 @@ contract variable_scopes_basics_1{
     }
 
 }
- */
 
-/* 
+
 contract Mmory_2{
     // uint public tomato = 30;        //stored in storage     //we can't write memory with uint on function arguments only array, struct, string(default storage) rem
     string public str = "FUCK";
@@ -173,9 +172,8 @@ contract Mmory_2{
 
 
 }
- */
 
-/* 
+
 contract data_types{
     bool public booltemp = true;           //boolean
 
@@ -189,7 +187,7 @@ contract data_types{
 
     //Remember there is nothing like NULL in solidity so if you don't intialize the variable then they get default value ofc they are also using gas ("SO IT's far better if you use only those things that are actually going to be used and do not waste so that gas cost can be reduced as much as possible")
 }
- */
+
 
 //Multiline comment issue (bug ig)
 contract global_var{
@@ -231,7 +229,7 @@ contract global_var{
     */
 } 
  
-/* 
+
 contract array_fixed_and_dynamic{
     //below i will tell you that doing any dynamic process in the function makes it unreturnable well that is truel but not just that is true... actually when you do both read and write operation in function then it becomes unreturnable and obv that would be unreturnable cuz you are writing storage array values... so its not restriced to dynamic process only its restricted to read and write operation understood.?!
 
@@ -283,10 +281,10 @@ contract array_fixed_and_dynamic{
         }
     }
 }
- */
 
 
-/* 
+
+
 contract constant_and_constructer{
     // deploy hone ke baad contract ka sabse pehle constructor call hota hai automatically. That's why if if you have some kind of parameters for constructer then before deploying you have to pass them in with the deploy button so that they get passed into constructor
     uint public tomato = 12;
@@ -298,9 +296,9 @@ contract constant_and_constructer{
     uint public constant const_value = 34;          //takes less gas but immutable
 
 }
- */
 
-/* 
+
+
 contract default_value{
     
     // default values of all printing------
@@ -311,9 +309,9 @@ contract default_value{
     bytes32 public two;         //32*2 = 64 hexadecimal values--- due to 1 byte = 2hexadecimal values
     string public shit;         //nothing
 }
- */
 
-/* 
+
+ 
 contract strings_byte{
     
     // strings are the only data type which cause syntactical problem while using in function it doesn't work like another variable i.e: on writing (string val = "HELLO") won't store the value in memory and will give errror. THe only main reason is it by default store values in storage whatever happens. But to bypass that you have to use memory keyword. same happens in uint[]
@@ -341,8 +339,8 @@ contract strings_byte{
     //why and when to use bytesX when you need a specific size string only and also you need it in memory rather than storage automatically
 
 }
- */
-/* 
+
+
 contract enums_{
     // ENUMS are basically datatype which can be used to multiple bool value like bool have two have but like what if you have more than two status like in shipping product (requested->out for delevry->shipped->local store->received->calcel) you get it right so that's why we use them
     // NOw it is also true that it is used to name integer constants so think aboout it the same way you are naming states for something for multiple possiblites
@@ -370,8 +368,8 @@ contract enums_{
     }
 
 }
- */
-/* 
+
+
 contract dynamic_byte{
     bytes public temp;              //not writing any size like (bytes5) with it will make it dynamic
 
@@ -393,9 +391,9 @@ contract dynamic_byte{
     }
 
 }
- */
 
-/* 
+
+
 contract location_types_or_memory_types{
     // TEMP -- So this is about memory storage types in  solidity when the process happens at evm (Etherum Virtual Machine). 
     // 1. Storage :- Where the contract is stored Permenantly (much like harddrive). Variable such as (statevariables) are stored into this location. And this is very expensive
@@ -414,7 +412,7 @@ contract location_types_or_memory_types{
 
     // https://stackoverflow.com/a/71773121/13914357
 }
- */
+
 
 
 //  -------------working on struct user defined varialbe------------------------
@@ -425,7 +423,7 @@ struct my_struct{                       //creating user defined data types i.e: 
 }
 //  -------------working on struct user defined varialbe------------------------
 
-/* 
+
 contract practice2{
     
     my_struct public s1;
@@ -459,9 +457,9 @@ contract practice2{
     }
 
 }
- */
 
-/* 
+
+
 contract practice3{
     my_struct[] public arr;         /// you just won't get whole array but you can get individual values
 
@@ -494,12 +492,13 @@ contract practice3{
     }
 
 } 
-*/
+
 
 //  -------------working done on struct user defined varialbe------------------------
 
-/* 
+
 //-------------------Mapping in solidity------------------------
+//keys can be of following types :- normal datatypes, enums and "contract" and addresss
 struct donor_dts{           //created a struct variable type for ngo donation
     string name;
     uint age;
@@ -520,4 +519,163 @@ contract advMapping{
     }
 }
 //-------------------Mapping in solidity------------------------
- */
+
+/* 
+contract visiblity{
+    video - visibility		(know about public private and external internal keyword easy and important)
+
+    1. Potential call
+    --> mycontract:-  within the contract itself
+    --> derived Contract:- from the derived contract 
+    --> another cotnract:- from the not derived or another contract calling for accessing variable or function
+    --> outside world-> like when we are calling them just like remix create button for them and we simply click them to call this is from outside world
+
+    ---State variable can't be external
+
+    2. visiblity 
+    --> public				// ALL calling is possible		
+    --> private			// only potential caller is "my contract"
+    --> internal			// my contract and derived contract
+    --> external			//  only another contract and outside world		(by creating object of contract)
+
+    3. --State varialbe are by default INTERNAL
+    ---function are by default PUBLIC (but after 8.0 version you have to explicity write them must with function)
+
+
+    4. And to inherit a contract (inheriting A for B here )
+    contract B is A{}
+
+    5. just telling you can do something like "return fun();" which will return the fun() result
+
+    6. Also gas used is decreased in the series given below so that you know what to do when for less gas usage as requirement filling
+
+    Public		//maximum gas		//Security risk is more
+    external
+    Internal
+    Private		// Minimum gas usage 	// security risk is less
+} 
+*/
+
+
+// ------ -------------- INHERITANCE-------------- -------------------
+
+// ------------inheritance  -------------	// Learn about inheritance and virtual and override keyword
+
+// 1. You know aall about inheritance already
+// -- Just write Contract B is A; 		//to inherit Contract A for B
+
+// 2. Virtual :- It actually gives the permit to override or redefine it in another derived function only. By that it has its own copy but the derived contract has his own another working copy but with the sam name (function or variable you can say)
+
+// 3. Override :- It basically redefine the pre permitted virtual keyword functions inside the another derived contract.
+
+
+	
+contract A{
+    uint public x = 100;
+    address public owner = msg.sender;
+
+    function fun1() public pure returns(string memory){
+        return "I am in contract A";
+    }
+    function fun2() public pure returns(string memory){
+        return "I am in contract A";
+    }
+    function fun3() public pure virtual returns(string memory){             //Virtual keyword gives the function permit to get overrided in any derived contract  
+        return "I am in contract A";
+    }
+    function fun4() public pure virtual returns(string memory){
+        return "I am in contract A";
+    }
+}
+
+
+contract B is A{
+    function fun3() override public pure returns(string memory){            //overrided keyword override or can redefine for the the current derived contract
+        return "I am in contract B";
+    }
+    function fun4() virtual override public pure returns(string memory){        //well you are going to both override for curretn contract and giving permission it to get overrided in another contract too using virtual
+        return "I am in contract B";
+    }
+}
+
+contract C is B{            // Here you might think what it will print for fu   n3 and fun4  and the simple answer is : It only looks for the functionalites of Its only Parent ONly THat means COntract B right? SO contract B has overrided and some inherited properites and C will get the same  
+    function fun4() override public pure returns(string memory){        // Here we overrided something also so its value would be chagned for This contract
+        return "I am in contract C";
+    }
+}
+
+// ------ -------------- INHERITANCE-------------- -------------------
+
+// EVENT -----INDEXING -------
+
+// 1. USage of events:- 
+
+// --> Jab hame kisi value of contract ko na to read karana ho or na hi write karana ho in future and we just want it to be stored on blochain that's the only thing we want then event do this thing at a very low gas cost. Btw all data stored on blockchian can be seen on transaction log
+
+// --> Button click karne par dapp me kya show hoga is decided by event
+
+// 2. while defining event do write the argument names (good practice)
+
+// 3. when you are manipulating state variable or lets say blockchain materials then you don't have to use view or pure cuz you are writing things on blockchain OKAY!!
+// Types of function PROCESSING :- VIEW 		PURE		SIMPLE  (simple don't return anything btw REM)
+
+// 4. index is somethign that lets your process remind that how many times the communcation happended bw two of contracts to use this functionality you use indexed. (which can only be used at max with three arguments in event defining)
+
+// SImple means we are going to access read and write operation both
+
+contract event_{            //look at the logs for confirmation of uploaded data on blockchain
+    event balance(address account, string message, uint value);     //creating event when there will be emit then this will be called
+
+    function setdata(uint _val) public {
+        emit balance(msg.sender, "I am setdata", _val);     // this will make the event store these value on blockchain (application of event tbh) in low gas price and as you can see we didn't want to write and not read too
+    } 
+}
+
+contract chatapp{
+    event chat(address indexed from, address to, string message);   //Now here listen if you want to get how many times you send msgs from one contract to another cuz there can be many contracts and you wanna know individual about two contract communication details (amount of msgs) then you use index for that
+    //one more thing to understnad here is you can only use indexed for at max three arguments but not more than that
+
+
+    function sendmsg(address sender) public{            
+        emit chat(msg.sender, sender, "HELLO!");        //write event name with emit too btw
+    }
+}
+// ----------------------EVENTS---------------------------
+
+
+// ----------------------REQUIRE (error handling)---------------------------
+
+// Require keyword (mostly used for error handling)
+
+// 1. application
+// --> Input validation	(input dali jo hai kya vo sahi hai using error handling)
+// --> access control	(means that only owner can access it)
+
+// 2. Advantage
+// --> Gas refund (lets say you are doing error handling by using require keyword and lets suppose that the condition failed so from 1000 gas 800 will be reverted back cuz only 200 got used 
+// --> state variables are reverted back on condtion false in require uk error handling catch kinda like
+
+
+// ASSERT has same advantage btw
+
+
+contract require__{
+    address public owner = msg.sender;      //storing owner address (rem owner is the one who deploy the contract) the other working in the meantime later are calling not the owner they are the "another contract"
+
+    uint public age = 25;       //storing age as 25 but remember the another contract can access it
+    
+    // also when the require fails or lets say error came then teh gas is not wasted and reverted back to you (expected 1000 - used till execution 200 = 800 reverted back to you) saved gas = 800 in error handling
+
+    //remember in this function the anotehr function can also alter the variable values there isn't written here that onwer must call this function (down one is the fun youre looking for)
+    function checkrequire(uint _x) public{      //if you pass _x as more than 2 then age will be changed but 
+        age = age+5;                            //if you don't then even when it has been passed already even then it would show the reverted or intial i.e before callin this function value that was stored into it right that is it revert the value to its intial value.
+        require(_x > 2, " value of x is less than 2");  // Now here is the error handling require working on
+    }
+
+    function onlyowner() public{        // HERe we have asked the caller of this function to be the owner only otherwise it won't work (owner :- who deployed the contract )
+        require(owner == msg.sender, "Yes!! You are the owner!!");      // Now it will verify 
+        age = age-2;
+    }
+}
+
+// ----------------------REQUIRE (error handling)---------------------------
