@@ -679,3 +679,188 @@ contract require__{
 }
 
 // ----------------------REQUIRE (error handling)---------------------------
+
+
+
+// ----------------------REVERT AND ASSERT (error handling)---------------------------
+// revert and assert ---- used in error handling to revert back variable and save gas
+
+// 1. revert is used for custom errors although it gives almost same functionaliy like require but you can pass custom error even multiple errors as acc to requirments
+
+// revert throwerr_fun(string, address)		//can pass multiple argument for error
+
+// 2. assert is used for security purpose verification
+
+contract revert__{
+    uint public age = 4;
+
+    error throwerr(string, address);           //THROWERROR CAN BE USED FORM NOW       //Here you only write types  
+
+    function fun(uint _x) public{
+        age += 5;
+        
+        if(_x < 3){
+            revert throwerr("Someone tried to make request to your account", 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB);          //can return multiple errors the most advantage when uk maybe you want to returns the address that is trying to process something related to your account
+        }
+    }
+
+    function funny() view public{
+        address owner = msg.sender;
+        assert(owner == 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4);            //used to check at any time that eitehr this condition is working or not (like checking is the req coming from owner or not) not used too much btw
+
+    }
+}
+
+// ----------------------REVERT AND ASSERT (error handling)---------------------------
+
+
+// ----------------------MOdifier---------------------------
+// Take a look at this again not sure about all this crap
+
+contract MOdifier__{
+
+    uint public _x = 5;
+
+    modifier for_loop(){            //modifier without parameter
+        for(uint i=0; i<10; i++){                   
+            _x +=  i;
+        }
+        _;                          // wrting this will stop the focus here and after execution also comes here nothing much  
+    }
+
+    function two() public for_loop returns(uint){           // only found a way to make them reusable in function starting 
+            return _x;
+    }
+
+    //Need to take a look at with variable modifier btw
+}
+// ----------------------MOdifier---------------------------
+
+
+
+// ----------------------PAYABLE FOR addresses and functions---------------------------
+// payable can be used for addresses and function..
+
+// --> for payalbe address they can accept amounts
+
+// --> for payble function their same cantract can accept payments
+
+// ---> WHile writing payable be very careful that you write payable before public keyword and in function its ok to write after public 
+
+// --> ALso as you know that modifier needs to be written before returns
+
+// -->well when you make a function payable and at the end you receive some ether lets say then actually at that point your contract is actually storing those ethers... also later thet get added to your address as according to the contract functionalities
+
+// --> YOu need to convert or typecast addresses to payable type... (for example if you are trying to make owner payable then you gotta do this typecast too{ add payable owner = payable(msg.sender) //did typecast here ---}
+
+// --> red button shows the payable in remix
+// --> orange shows that the function is of simple type actually both reading and writing functionality type
+// ---> BLue button shows that either the variable is state or the function is either pure or view (read or write type)
+
+// -->and btw 1 ether == 10^18 wei
+// -> wei is the smallest unit of ether just a measument tool tbh
+
+//--------------- DIff between owner and currently interacting address
+        //  MSG.sender :- SO basically msg.sender is the owner of the contract (basically the one who actually deployed the contract)      (it will be same always after deploying)
+        // Address(this): - Address(this) leaves teh one hwo is currently interacting with the contract it can be anyone in the world
+//--------------- DIff between owner and currently interacting address
+
+
+contract payable__{
+
+    address payable public owner  = payable(msg.sender);        //can't write payable after public
+
+    function geteth() public payable{           //can write payabe after public         
+
+    }
+
+    constructor() payable{              // YOu might come across "construct e r" and "contruct o r" may be --just saying-- the second one is real 
+        // If you want the contract to be payalbe only intially and then never
+    }
+
+    function getadd() public view returns(address, address){
+        return(msg.sender, address(this));                          // HERE its very imp to understand that what's msg.sender and whats address(this)
+        // SO basically msg.sender is the owner of the contract (basically the one who actually deployed the contract)      (it will be same always after deploying)
+        // Address(this) leaves teh one hwo is currently interacting with the contract it can be anyone in the world
+    }
+
+
+    function checkbal() public view returns(uint){
+        return address(this).balance;
+    }
+}
+// ----------------------PAYABLE FOR addresses and functions---------------------------
+
+
+// ----------------------Fallback And Receive---------------------------
+// #FALLBACK
+// It is executed when a non existent function is called on the contract 
+// It is required to be marked external
+//  It has no arguments
+//  It can not return any thing
+//  It can be defined one per contract 
+// If not marked payable, It will throw exception if contract receives ether.
+//  It's main use is to directly send the ETH contract.
+
+// #RECEIVE
+// Its main purpose is to send ehter only.
+// It can't send data but fallback can send data and ether both but recieve can only send ether only
+// ------------------------------Some Notes to consider while reading-------------------
+
+contract fallback_and_receive{
+
+    // fallback() external payable{                             //MUst have to be external payable isn't important
+    //         //The only diff between fallback and receive is that
+    //         //fallback focus on both data receiving and ether receiving
+    //         // You can get the low level form after deploying 
+    // }
+
+    // receive() external payable{             
+    //     //Some important points to take care of
+    //     // receive must be payable and external uk the reason behind it already
+    //     // i.e it only receives ether so payable is must and it is called by someone outside so external neither from the contract too so external( read more about visiblity fro more)
+
+    // }
+
+    // Now here there might a doubt occur that what if there are both of them present who will recieive ether 
+    //so the concept is if you have both and sending both data and ether then obv fallback will receive 
+    // if you are inputting only ether then the ethers will be received by recevive that's it
+    //Now if fallback is only present now it will simply accept both data and ether.
+
+    function checkbaln() public view returns(uint){
+        return (address(this).balance);
+    }
+
+}
+// ----------------------Fallback And Receive---------------------------
+
+
+
+// ----------------------SEND TRANSFER & CALL---------------------------
+/* 
+There are three mehtods to send ether using send methods (send, transfer, call)
+
+-> ether can be send to contract or a address of account also
+
+#SEND
+-->send has some limit of 2300gas if gas cost goes high the transaction would fail
+
+--> send function always returns a bool value which ofc is true on succedd and false on fail
+
+--> required --> When using send must use require cuz 
+1.) it doesn't revert back state variables on failing and 
+2.) also the gas remained after failed gets also used which is a huge issue so better use require(error handling) with it
+
+#TRANSFER
+--> in transfer basically again 2300 gas limit
+--> doesn't returns anything
+--> it has inbuilt require functionality so it revert gas as well as state variables state also
+
+# CALL 
+--> It don't have gas limit
+--> it returns bool value and some byte data
+--> It doesn't have require functionlaity 
+*/
+
+
+// ----------------------SEND TRANSFER & CALL---------------------------
