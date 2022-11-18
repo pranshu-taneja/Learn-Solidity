@@ -864,3 +864,100 @@ There are three mehtods to send ether using send methods (send, transfer, call)
 
 
 // ----------------------SEND TRANSFER & CALL---------------------------
+
+
+
+
+// ----------------------SEND TRANSFER & CALL PRACTICAL---------------------------
+contract send_eth{              
+    receive() payable external{
+
+    }
+
+    // constructor() payable{              //See it makes the whole deploying with ether payment starting 
+        
+    // } 
+
+    // address payable getter = payable(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);               //In this code we are telling you to send to a specific address but later we will tell you for anyone        //uncommenting it and removing parameter from function below will make it wokring
+    
+    function checkbal() public view returns(uint){
+        return address(this).balance;
+    }
+
+    function usage_send(address payable getter) payable public {
+        bool result = getter.send(1000000000000000000);                 //Here remember your contract is actullay sending these 1ether to someone you described in getter OKAY!! Just telling so don't have a misconception regarding that your contract cheanging might affect this /// it won't cuz you have added ether into contract from some account and now you are sending ether from this contract only
+    
+        require(result, "Transaction Just  Fucked by send");             //Only fail when gas limit goes higher than 2300        ///always use require with send functions
+    } 
+
+    function usage_transfer(address payable getter) payable public{
+        getter.transfer(1000000000000000000);               //automatic error handling capability       //don't return anything for transfer
+    }
+
+    //Well its the typical one and the most used one due to customized usage of gas
+    function usage_call(address payable getter) payable public{                    //You decide the gas amount //Here it is using the default set by remix btw     //well it does require you  input for sending to which address 
+        
+        (bool msg_,) = getter.call{value:1000000000000000000}("");              //just cramp this syntax cuz it call accepts two parameters (value, msg) which are basically bool and byte type             //take a look carefully at the (bool, msg__,) kinda very weird
+        require(msg_, "transaction got failed for call");               //require cuz it might fail and in that case to revert state variable and saving gas is essential so here we go
+    }
+}
+
+// ----------------------SEND TRANSFER & CALL PRACTICAL---------------------------
+
+
+// ----------------------Well what if you directly want something that passes the ether from "account --> contract --> another" account in one go---------------------------
+contract send_eth_extended{           
+    //Just change the amount of ether you specified for sending to another address from 10^18 to (msg.value) It will automatically handle everything   
+    //and change the fuction to payable cuz they are gonna do something bad shit this time by their own ok UK 
+    //NOw you don't need to send to contract first and then ask contract to send it to anohter just tell the value you want to send from one account to another account and that specified value would be gone just by one clcick of fucntions given below 
+
+
+    receive() payable external{                 //just to receive payment from low level transaction (i.e directly from calldata form transaction buttoon)
+
+    }
+
+    // constructor() payable{              //See it makes the whole deploying with ether payment starting 
+        
+    // } 
+
+    // address payable getter = payable(0xdD870fA1b7C4700F2BD7f44238821C26f7392148);               //In this code we are telling you to send to a specific address but later we will tell you for anyone        //uncommenting it and removing parameter from function below will make it wokring
+    
+    event log(uint value);      //just to show you the working thats it             //look at the logs in terminal you will get to know about the msg.value functionality
+
+    function checkbal() public view returns(uint){
+        
+        return address(this).balance;
+    }
+    
+    function usage_send(address payable getter) payable public {
+        emit log(msg.value);
+
+        bool result = getter.send(msg.value);                 //Here remember your contract is actullay sending these 1ether to someone you described in getter OKAY!! Just telling so don't have a misconception regarding that your contract cheanging might affect this /// it won't cuz you have added ether into contract from some account and now you are sending ether from this contract only
+    
+        require(result, "Transaction Just  Fucked by send");             //Only fail when gas limit goes higher than 2300        ///always use require with send functions
+    } 
+
+    function usage_transfer(address payable getter) payable public{
+        emit log(msg.value);
+
+        getter.transfer(msg.value);               //automatic error handling capability       //don't return anything for transfer
+    }
+
+    //Well its the typical one and the most used one due to customized usage of gas
+    function usage_call(address payable getter) payable public{                    //You decide the gas amount //Here it is using the default set by remix btw     //well it does require you  input for sending to which address 
+        emit log(msg.value);
+       
+        (bool msg_,) = getter.call{value:msg.value}("");              //just cramp this syntax cuz it call accepts two parameters (value, msg) which are basically bool and byte type             //take a look carefully at the (bool, msg__,) kinda very weird
+        require(msg_, "transaction got failed for call");               //require cuz it might fail and in that case to revert state variable and saving gas is essential so here we go
+    }
+}
+// ----------------------Well what if you directly want something that passes the ether from "account --> contract --> another" account in one go---------------------------
+
+
+
+// ----------------------How to receive ehter to another contract rather than a account address (here solution)---------------------------
+contract get_ether{
+    receive() external payable{}                //receive if you remeber is used for low level transaction that means it permits the cotnract to recieive payments from outside resources either from "(calldata form) or any other account or contract "also
+    //recieve is mainly used to receive payment only not data btw uk
+}
+// ----------------------How to receive ehter to another contract rather than a account address (here solution)---------------------------
